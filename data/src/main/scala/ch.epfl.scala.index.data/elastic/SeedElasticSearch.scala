@@ -84,7 +84,7 @@ class SeedElasticSearch(paths: DataPaths, githubDownload: GithubDownload)(
     )
 
     log.info("loading update data")
-    val projectConverter = new ProjectConvert(paths, githubDownload)
+    val projectConverter = new ProjectConvert(paths, Some(githubDownload))
     val newData = projectConverter(
       PomsReader.loadAll(paths).collect {
         case Success(pomAndMeta) => pomAndMeta

@@ -19,7 +19,7 @@ import org.joda.time.DateTime
 
 import org.slf4j.LoggerFactory
 
-class ProjectConvert(paths: DataPaths, githubDownload: GithubDownload)
+class ProjectConvert(paths: DataPaths, githubDownload: Option[GithubDownload] = None)
     extends BintrayProtocol {
 
   private val log = LoggerFactory.getLogger(getClass)

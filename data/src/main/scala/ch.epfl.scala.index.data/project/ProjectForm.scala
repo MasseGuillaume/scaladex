@@ -29,7 +29,7 @@ case class ProjectForm(
 ) {
   def update(project: Project,
              paths: DataPaths,
-             githubDownload: GithubDownload,
+             githubDownload: Option[GithubDownload],
              fromStored: Boolean = false): Project = {
 
     val githubWithKeywords =
@@ -45,8 +45,10 @@ case class ProjectForm(
     val getBeginnerIssues = fromStored && beginnerIssues.isEmpty && beginnerIssuesLabel.isDefined
     val newBeginnerIssues =
       if (getBeginnerIssues) {
-        githubDownload.runBeginnerIssues(project.githubRepo,
-                                         beginnerIssuesLabel.getOrElse(""))
+        githubDownload.foreach(
+          _.runBeginnerIssues(project.githubRepo,
+                              beginnerIssuesLabel.getOrElse(""))
+        )
         GithubReader
           .beginnerIssues(paths, project.githubRepo)
           .getOrElse(List())

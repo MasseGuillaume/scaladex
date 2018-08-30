@@ -414,7 +414,7 @@ class DataRepository(
                     form: ProjectForm): Future[Boolean] = {
     for {
       updatedProject <- project(projectRef).map(
-        _.map(p => form.update(p, paths, githubDownload))
+        _.map(p => form.update(p, paths, Some(githubDownload)))
       )
       ret <- updatedProject
         .flatMap { project =>

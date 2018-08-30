@@ -3,7 +3,6 @@ package data
 package elastic
 
 import project._
-import github.GithubDownload
 import maven.PomsReader
 
 import com.sksamuel.elastic4s.ElasticDsl._
@@ -14,7 +13,7 @@ import scala.util.Success
 
 import org.slf4j.LoggerFactory
 
-class SeedElasticSearch(paths: DataPaths, githubDownload: GithubDownload)(
+class SeedElasticSearch(paths: DataPaths)(
     implicit val ec: ExecutionContext
 ) extends ProjectProtocol {
 
@@ -84,7 +83,7 @@ class SeedElasticSearch(paths: DataPaths, githubDownload: GithubDownload)(
     )
 
     log.info("loading update data")
-    val projectConverter = new ProjectConvert(paths, githubDownload)
+    val projectConverter = new ProjectConvert(paths, None)
     val newData = projectConverter(
       PomsReader.loadAll(paths).collect {
         case Success(pomAndMeta) => pomAndMeta

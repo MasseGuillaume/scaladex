@@ -78,7 +78,7 @@ class IndexingActor(
     def updateProjectReleases(project: Option[Project],
                               releases: List[Release]): Future[Unit] = {
 
-      val converter = new ProjectConvert(paths, githubDownload)
+      val converter = new ProjectConvert(paths, Some(githubDownload))
 
       val (newProject, newReleases) = converter(
         pomsRepoSha = List((pom, localRepository, data.hash)),

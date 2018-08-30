@@ -64,7 +64,6 @@ object Main {
       DataPaths(pathFromArgs.take(3))
     }
 
-    val githubDownload = new GithubDownload(getPathFromArgs)
     val steps = List(
       // List POMs of Bintray
       Step("list")({ () =>
@@ -100,11 +99,11 @@ object Main {
       ),
       // Download additional information about projects from Github
       Step("github")(
-        () => githubDownload.run()
+        () => new GithubDownload(getPathFromArgs).run()
       ),
       // Re-create the ElasticSearch index
       Step("elastic")(
-        () => new SeedElasticSearch(getPathFromArgs, githubDownload).run()
+        () => new SeedElasticSearch(getPathFromArgs).run()
       )
     )
 
@@ -152,18 +151,6 @@ object Main {
 
     logger.info("Executing steps")
     stepsToRun.foreach(_.run())
-
-    if (production) {
-      inPath(getPathFromArgs.index) { sh =>
-        logger.info("Saving the updated state to the 'index' repository")
-        sh.exec("git", "add", "-A")
-        def now() =
-          LocalDateTime
-            .now()
-            .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"))
-        sh.exec("git", "commit", "--allow-empty", "-m", '"' +: now() :+ '"')
-      }
-    }
 
     system.terminate()
     ()
